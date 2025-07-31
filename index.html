@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Writing Prompt + Streak Tracker</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      text-align: center;
+      padding: 2em;
+      max-width: 700px;
+      margin: auto;
+    }
+    #prompt-box {
+      margin: 1em auto;
+      padding: 1em;
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      background: #fdfdfd;
+    }
+    #streak {
+      font-size: 1.3em;
+      margin-bottom: 1em;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 1em;
+      margin-top: 10px;
+      border-radius: 6px;
+      border: none;
+      background: #222;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #444;
+    }
+  </style>
+</head>
+<body>
+  <h1>📝 Daily Writing Widget</h1>
+  <div id="streak">🔥 Writing Streak: 0 days</div>
+
+  <div id="prompt-box">
+    <div id="prompt">Click the button to get a writing prompt!</div>
+    <button onclick="newPrompt()">New Prompt</button>
+  </div>
+
+  <button onclick="logToday()">✅ I wrote 750+ words today</button>
+
+  <script>
+    const prompts = [
+      "Describe how your workspace has changed throughout your career, using it as a lens to examine your professional growth.",
+      "Explore how the ways you express and receive love have evolved throughout your life and relationships.",
+      "Choose a scar on your body and write about how you got it, what you learned, and how it changed you.",
+      "Explore your hometown as if you're an anthropologist from another planet, noting customs, rituals, and artifacts.",
+      "Describe a vivid memory using all five senses, exploring how sensory details connect to emotions and meaning.",
+      "Recount a specific experience in nature and the profound lesson or insight it provided about life or yourself."
+    ];
+
+    function newPrompt() {
+      const random = prompts[Math.floor(Math.random() * prompts.length)];
+      document.getElementById("prompt").innerText = random;
+    }
+
+    function getToday() {
+      return new Date().toISOString().split('T')[0];
+    }
+
+    function logToday() {
+      const today = getToday();
+      const last = localStorage.getItem("lastWritten") || "";
+      let streak = parseInt(localStorage.getItem("streak") || "0");
+
+      if (last === today) {
+        alert("Already logged today.");
+        return;
+      }
+
+      const yesterday = new Date(Date.now() - 86400000).toISOString().split('T')[0];
+
+      if (last === yesterday) {
+        streak += 1;
+      } else {
+        streak = 1;
+      }
+
+      localStorage.setItem("lastWritten", today);
+      localStorage.setItem("streak", streak);
+      updateStreak();
+    }
+
+    function updateStreak() {
+      const streak = localStorage.getItem("streak") || 0;
+      document.getElementById("streak").innerText = `🔥 Writing Streak: ${streak} day${streak == 1 ? '' : 's'}`;
+    }
+
+    updateStreak();
+    newPrompt();
+  </script>
+</body>
+</html>
